@@ -1,7 +1,7 @@
 # Software design documentation 
 
 ---
-###Table of Content
+## Table of Content
 - [Introduction](@Introduction).
 - [System Overview/Operation](@System Overview/Operation).
 - [Design Pattern](@Design Pattern).
@@ -10,7 +10,7 @@
 
 --- 
 
-###1. Introduction: 
+### 1. Introduction: 
 
  
 
@@ -34,7 +34,7 @@ Appropriate error responses must always be returned to clients if it uses the da
 ---
  
 
-###2. System Overview/Operations: 
+### 2. System Overview/Operations: 
 
  
 
@@ -47,26 +47,26 @@ This data store can perform the following three operations:
 2.3. Delete: The value will be deleted is the key is present in the data store. 
 
  ---
-###3. Design Pattern: 
+### 3. Design Pattern: 
 
-####3.1. Usecase Diagram 1: 
+#### 3.1. Usecase Diagram 1: 
 ![Usecase diagram1](usecase1.jpg "Usecase1")
 
-####3.2. Usecase Diagram 2: 
+#### 3.2. Usecase Diagram 2: 
 ![Usecase diagram2](usecase2.jpg "Usecase2")
 
 
  ---
 
-###4. Testability: 
+### 4. Testability: 
 
  
 
-####4.1. Unit Testing: 
+#### 4.1. Unit Testing: 
 
  
 
-####4.1.1. Create: 
+#### 4.1.1. Create: 
 
  
 
@@ -80,7 +80,7 @@ If the key is present in the data store with all the condition's then the JSON v
 
                   
 
-####4.1.2. Read: 
+#### 4.1.2. Read: 
 
  
 
@@ -90,7 +90,7 @@ If the key is present in the data store then it will return the JSON value.
 
  
 
-####4.1.3. Delete: 
+#### 4.1.3. Delete: 
 
 If the key is not present in the data store then it will return an error stating that the value cannot be deleted. 
 
