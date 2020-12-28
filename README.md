@@ -3,8 +3,8 @@
 ---
 ## Table of Content
 - [Introduction](@Introduction).
-- [SystemOverview/Operation](@System Overview/Operation).
-- [DesignPattern](@Design Pattern).
+- [SystemOverview/Operation](@SystemOverview/Operation).
+- [DesignPattern](@DesignPattern).
 - [Testability](@Testability).
 - [Conclusion](@Conclusion).
 
