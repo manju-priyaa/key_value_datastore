@@ -27,6 +27,8 @@ class DataStore:
         Validate the length of the key is less than 16 KB
         :return: type:str
         """
+        if type(self.key) != str:
+            raise KeyInvalidException("The Key was not of type str")
         if not 0 < len(self.key) <= 32:
             raise KeyInvalidException("The Length of the key must be less than 32 characters")
 
@@ -37,10 +39,10 @@ class DataStore:
         :param value: type: JSON value
         :return: type:JSON value
         """
-
-        if len(value) > 16 * 1024:
-            raise ValueInvalidException("The Length of the value must be less than 16KB")
-        return value
+        if type(value) != dict:
+            if not 0 < len(value) <= 16 * 1024:
+                raise ValueInvalidException("The Length of the value must be less than 16KB")
+            return value
 
     def create(self, value):
 
@@ -86,7 +88,7 @@ class DataStore:
 
 #
 # Testing
-# o = DataStore(key='mohan')
+# o = DataStore(key='manju')
 # o.create(value={'1':1})
 # print(o.read())
 # o.delete()

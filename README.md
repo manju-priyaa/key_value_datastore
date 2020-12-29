@@ -6,6 +6,8 @@
 - [SystemOverview/Operation](@SystemOverview/Operation).
 - [DesignPattern](@DesignPattern).
 - [Testability](@Testability).
+- [HowToUseDataStore](@HowToUseDataStore).
+- [TechnologyUsed](@TechnologyUsed).
 - [Conclusion](@Conclusion).
 
 --- 
@@ -55,6 +57,9 @@ This data store can perform the following three operations:
 #### 3.2. Usecase Diagram 2: 
 ![Usecase diagram2](usecase2.jpg "Usecase2")
 
+#### 3.3. Class Diagram:
+![Class Diagram](classdiagram.jpg "ClassDiagram")
+
 
  ---
 
@@ -68,37 +73,129 @@ This data store can perform the following three operations:
 
 #### 4.1.1. Create: 
 
- 
+- If there is no value inside the create parameter then it returns an error, value not present.
+```
+def test_value_zero():
+    with pytest.raises(ValueInvalidException):
+        o = DataStore(key='test1')
+        o.create(value='')
+        o.delete()
+```
+- If the length of the value is greater than 16 KB then it returns an error, limit exceeded.
+```
+def test_value_more_than_16_KB():
+    with pytest.raises(ValueInvalidException):
+        o = DataStore(key='test2')
+        o.create(value= 'aaaaaaaaaaaaa...upto17kb)
+```
+- If the type of the value is not an JSON value then it returns an error, type invalid.
+```
+def test_value_not_JSON():
+    with pytest.raises(TypeError):
+        o = DataStore(key='test3')
+        o.create(123)
+        o.delete()
+```
 
-If the key is already present in the data store then it will return an error stating key present or key cannot be overridden. 
+- If the key is already present in the data store then it returns an error, key present or key cannot be overridden. 
+```
+def test_create_for_same_key():
+    with pytest.raises(FileExistsError):
+        # If same file executed twice raise File exists error.
+        o = DataStore(key='test3')
+        o.create(value={'1': 1})
+        o = DataStore(key='test3')
+        o.create(value={'1': 2})
+    o.delete()
+```
+- If the key length exceeds more than 32 character then it returns an error, limit exceeded. 
+```
+def test_key_more_than_33_char():
+    with pytest.raises(KeyInvalidException):
+        o = DataStore(key='some_large_keysome_large_keysome_large_keysome_large_keysome_large_keysome_large_key')
 
-If the key length exceeds more than 32 character then it will return an error stating limit exceeded. 
-
-If the key format is an Alphanumeric character then in will return an error stating provide key is not valid.     
-
-If the key is present in the data store with all the condition's then the JSON value is created. 
-
-                  
+```
+- If the key format is not an string then it returns an error, key is not valid.     
+```
+def test_key_not_string():
+    with pytest.raises(KeyInvalidException):
+        o = DataStore(key=1234)
+```
+- If the key is present in the data store with all the condition's then the JSON value is created. 
+          
 
 #### 4.1.2. Read: 
 
  
 
-If the key is not present in the data store it will return an error stating that the value is not present. 
+- If the key is not present in the data store it will return an error, the value is not present.
+```
+def test_read_non_existent_key():
+    with pytest.raises(FileNotFoundError):
+        # If the file does not exists.
+        o = DataStore(key='test4')
+        o.read()
+``` 
 
-If the key is present in the data store then it will return the JSON value. 
+- If the key is present in the data store then it will return the JSON value. 
 
  
 
 #### 4.1.3. Delete: 
 
-If the key is not present in the data store then it will return an error stating that the value cannot be deleted. 
+- If the key is not present in the data store then it will return an error stating, the value cannot be deleted. 
+```
+def test_delete_not_existent_key():
+    with pytest.raises(FileNotFoundError):
+        # If the file does not exists.
+        o = DataStore(key='test5')
+        o.delete()
+``` 
 
-If the key is present in the datastore then it will delete the JSON value. 
+- If the key is present in the datastore then it will delete the JSON value. 
 
+#### 4.2. Results
+
+Screen Shots
+![Unittesting](unittest.png "Unit Testing Screen Shot")
 
 ---
 
-### 5. Conclusion:
+### 5. How to Use Data Store
+
+#### 5.1.  Creating a Key
+To create a key, you should create an object of the class DataStore with your key.
+Call the create function from the object with your value.
+```
+data = DataStore(key='key1')
+data.create(value={"json": "data"})
+```
+#### 5.2. Reading a Value
+To read a value, you should create an object of the class DataStore with your key
+Call the read function from the object.
+```
+data = DataStore(key='key1')
+data.create(value={"json": "data"})
+print(data.read()) 
+```
+#### 5.2. Deleting a Value
+To delete a value, you should create an object of the class DataStore with your key
+Call the delete function from the object.
+```
+data = DataStore(key='key1')
+data.create(value={"json": "data"})
+print(data.read()) 
+data.delete()
+```
+---
+
+### 6. Technology Used
+1. Language - Python
+2. IDE - Pycharm
+3. Testing - Pytest
+4. OS - Windows
+
+---
+### 7. Conclusion:
 
 
