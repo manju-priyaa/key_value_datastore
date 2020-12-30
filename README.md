@@ -2,13 +2,13 @@
 
 ---
 ## Table of Content
-- [Introduction](@Introduction).
-- [SystemOverview/Operation](@SystemOverview/Operation).
-- [DesignPattern](@DesignPattern).
-- [Testability](@Testability).
-- [HowToUseDataStore](@HowToUseDataStore).
-- [TechnologyUsed](@TechnologyUsed).
-- [Conclusion](@Conclusion).
+- Introduction.
+- SystemOverview/Operation.
+- DesignPattern.
+- Testability.
+- HowToUseDataStore.
+- TechnologyUsed.
+- Conclusion.
 
 --- 
 
@@ -154,10 +154,30 @@ def test_delete_not_existent_key():
 
 - If the key is present in the datastore then it will delete the JSON value. 
 
-#### 4.2. Results
+#### 4.1.4. Result
 
-Screen Shots
+Screen Shot
 ![Unittesting](unittest.png "Unit Testing Screen Shot")
+
+#### 4.2.1. File Storage
+- The size of the file  storing data must be less than 1GB.
+- In the below code I have tested for 1MB.
+```
+def test_data_not_1MB():
+    # The provided code must be tested for 1GB instead we test it for 10KB
+    with pytest .raises(DataInvalidException):
+        created_files = []
+        for data in range(1, 20):
+            o = DataStore(key=str(data))
+            o.create(value={'1': '111213165656611121316565661112131656566111213165656611121361....)
+
+    for file_obj in created_files:
+        file_obj.delete()
+
+```
+### 4.2.3. Result 
+ This Screen Shot includes all the test cases including test_keys,test_values and test_data.
+![UnittestingFileStorage](FileStorage.png "Size of the file is less than 1MB")
 
 ---
 
@@ -171,7 +191,7 @@ data = DataStore(key='key1')
 data.create(value={"json": "data"})
 ```
 #### 5.2. Reading a Value
-To read a value, you should create an object of the class DataStore with your key
+To read a value, you should create an object of the class DataStore with your key.
 Call the read function from the object.
 ```
 data = DataStore(key='key1')
@@ -179,7 +199,7 @@ data.create(value={"json": "data"})
 print(data.read()) 
 ```
 #### 5.2. Deleting a Value
-To delete a value, you should create an object of the class DataStore with your key
+To delete a value, you should create an object of the class DataStore with your key.
 Call the delete function from the object.
 ```
 data = DataStore(key='key1')
@@ -198,4 +218,13 @@ data.delete()
 ---
 ### 7. Conclusion:
 
+A File based key-value data store that supports Create, Read and Delete operation with all 
+the condition which includes as following:
+
+- Create: Creating a Json value of size less than 16KB and key of type string of  size less than 32 characters
+  and size of file less than 10 KB and creating a file with Json value for a non-existent key.
+- Read: Reading the file with JSON value for the corresponding existent key.
+- Delete: Deleting a file with JSON value for the corresponding existent key.
+
+Finally, Unit tested all the conditions specified above and provided screen shots for the same.
 

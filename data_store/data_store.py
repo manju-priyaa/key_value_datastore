@@ -16,11 +16,37 @@ class KeyInvalidException(Exception):
     pass
 
 
+class DataInvalidException(Exception):
+    """
+    raise data more than 10KB Exception.
+    """
+    pass
+
+
+DATASTORE_LOCATION = '{}/data'.format(os.getcwd())
+
+
 class DataStore:
 
     def __init__(self, key):
         self.key = key
         self.validate_key()
+
+    def validate_data(self):
+        """
+        Validate the size of the data in the data folder that must be
+        less than 10KB.
+        This can also be changed to less than 1GB.
+        :return: error if data is more than 10KB
+        """
+        total_size = 0
+        for dirpath, dirnames, filenames in os.walk(DATASTORE_LOCATION):
+            for f in filenames:
+                fp = os.path.join(dirpath, f)
+                total_size += os.path.getsize(fp)
+
+        if total_size > 10*1024:
+            raise DataInvalidException("The Size of the data must be less than 10KB")
 
     def validate_key(self):
         """
@@ -40,9 +66,9 @@ class DataStore:
         :return: type:JSON value
         """
         if type(value) != dict:
-            if not 0 < len(value) <= 16 * 1024:
-                raise ValueInvalidException("The Length of the value must be less than 16KB")
-            return value
+            raise ValueInvalidException("The value was not of type JSON value")
+        if not 0 < len(value) <= 16 * 1024:
+            raise ValueInvalidException("The Length of the value must be less than 16KB")
 
     def create(self, value):
 
@@ -52,10 +78,10 @@ class DataStore:
         :param value: type:JSON value.
         :return: type:None.
         """
-
+        self.validate_data()
         self.validate_value(value)
         print("Create function called with key={}, value={}".format(self.key, value))
-        file = open("{}.json".format(self.key), "x")
+        file = open("{}/{}.json".format(DATASTORE_LOCATION, self.key), "x")
         file.write(json.dumps(value))
         file.close()
         print("File Created Successfully")
@@ -69,7 +95,7 @@ class DataStore:
         """
 
         print("Read function called with key {}".format(self.key))
-        file = open("{}.json".format(self.key), "r")
+        file = open("{}/{}.json".format(DATASTORE_LOCATION, self.key), "r")
         value = json.loads(file.read())
         file.close()
         return value
@@ -83,17 +109,5 @@ class DataStore:
         """
 
         print("Delete function called with key {}".format(self.key))
-        os.remove("{}.json".format(self.key))
+        os.remove("{}/{}.json".format(DATASTORE_LOCATION, self.key))
         print("File Deleted Successfully")
-
-#
-# Testing
-# o = DataStore(key='manju')
-# o.create(value={'1':1})
-# print(o.read())
-# o.delete()
-#
-# o2=DataStore(key='manju')
-# # o2.create(value={'data1': {'manju': 2}})
-# # print(o2.read())
-# # o2.delete()

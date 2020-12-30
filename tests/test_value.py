@@ -18,14 +18,7 @@ def test_value_more_than_16_KB():
 
 
 def test_value_not_JSON():
-    with pytest.raises(TypeError):
+    with pytest.raises(ValueInvalidException):
         o = DataStore(key='test3')
         o.create(123)
         o.delete()
-
-
-
-
-
-
-
